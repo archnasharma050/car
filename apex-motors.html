@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APEX MOTORS — Precision. Power. Prestige.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&family=DM+Sans:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ===== CSS VARIABLES ===== */
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8C97A;
+  --gold-dim: #8B6F35;
+  --white: #F5F3EE;
+  --offwhite: #D9D4C7;
+  --black: #050505;
+  --deep: #0A0A0A;
+  --surface: #111111;
+  --surface2: #161616;
+  --surface3: #1C1C1C;
+  --border: rgba(201,168,76,0.15);
+  --text-muted: rgba(245,243,238,0.45);
+  --glass: rgba(255,255,255,0.04);
+  --glass-border: rgba(255,255,255,0.08);
+  --red: #C0392B;
+  --transition: 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ===== RESET & BASE ===== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+::selection { background: var(--gold); color: var(--black); }
+
+/* ===== CUSTOM CURSOR ===== */
+#cursor {
+  position: fixed; width: 12px; height: 12px;
+  background: var(--gold); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: width 0.2s, height 0.2s, opacity 0.2s;
+  mix-blend-mode: difference;
+}
+#cursor-ring {
+  position: fixed; width: 40px; height: 40px;
+  border: 1px solid rgba(201,168,76,0.5); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: all 0.12s ease;
+}
+body:has(a:hover) #cursor, body:has(button:hover) #cursor { width: 6px; height: 6px; }
+body:has(a:hover) #cursor-ring, body:has(button:hover) #cursor-ring { width: 60px; height: 60px; border-color: var(--gold); }
+
+/* ===== LOADING SCREEN ===== */
+#loader {
+  position: fixed; inset: 0; background: var(--black);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 10000; transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+#loader.hidden { opacity: 0; visibility: hidden; }
+.loader-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 8vw, 6rem);
+  letter-spacing: 0.3em;
+  color: var(--white);
+  overflow: hidden;
+}
+.loader-logo span {
+  display: inline-block;
+  animation: slideUp 0.8s cubic-bezier(0.25,0.46,0.45,0.94) both;
+}
+.loader-logo span:nth-child(1) { animation-delay: 0.1s; }
+.loader-logo span:nth-child(2) { animation-delay: 0.2s; }
+.loader-logo span:nth-child(3) { animation-delay: 0.3s; }
+.loader-logo span:nth-child(4) { animation-delay: 0.4s; }
+.loader-tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic; font-size: 1rem;
+  color: var(--gold); letter-spacing: 0.4em;
+  margin-top: 1rem; opacity: 0;
+  animation: fadeIn 0.8s ease 0.6s both;
+}
+.loader-bar {
+  width: 200px; height: 1px;
+  background: rgba(255,255,255,0.1);
+  margin-top: 3rem; position: relative; overflow: hidden;
+}
+.loader-bar::after {
+  content: ''; position: absolute; top: 0; left: -100%;
+  width: 100%; height: 100%; background: var(--gold);
+  animation: loadBar 1.8s ease 0.3s forwards;
+}
+@keyframes loadBar { to { left: 0; } }
+@keyframes slideUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ===== STICKY HEADER ===== */
+header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  padding: 1.5rem 4rem;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: all 0.5s ease;
+}
+header.scrolled {
+  background: rgba(5,5,5,0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 4rem;
+}
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem; letter-spacing: 0.25em;
+  color: var(--white); text-decoration: none;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.logo-icon {
+  width: 32px; height: 32px;
+  border: 1.5px solid var(--gold);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+}
+.logo-icon::after {
+  content: 'A'; font-size: 0.9rem; color: var(--gold); font-weight: 700;
+}
+nav { display: flex; align-items: center; gap: 2.5rem; }
+nav a {
+  color: var(--offwhite); text-decoration: none;
+  font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase;
+  font-weight: 400; position: relative; transition: color 0.3s;
+}
+nav a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0;
+  width: 0; height: 1px; background: var(--gold);
+  transition: width 0.4s ease;
+}
+nav a:hover { color: var(--gold); }
+nav a:hover::after { width: 100%; }
+.nav-cta {
+  background: var(--gold); color: var(--black) !important;
+  padding: 0.6rem 1.5rem; border-radius: 0;
+  font-weight: 500 !important; letter-spacing: 0.15em !important;
+  transition: background 0.3s !important;
+}
+.nav-cta::after { display: none !important; }
+.nav-cta:hover { background: var(--gold-light) !important; }
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: none; }
+.hamburger span { width: 26px; height: 1px; background: var(--white); transition: all 0.3s; }
+
+/* ===== MOBILE NAV ===== */
+.mobile-nav {
+  position: fixed; inset: 0; background: var(--deep);
+  z-index: 999; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 2.5rem;
+  transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.76,0,0.24,1);
+}
+.mobile-nav.open { transform: translateX(0); }
+.mobile-nav a {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem; letter-spacing: 0.2em;
+  color: var(--white); text-decoration: none;
+  transition: color 0.3s;
+}
+.mobile-nav a:hover { color: var(--gold); }
+
+/* ===== PAGE SECTIONS ===== */
+.page { display: none; }
+.page.active { display: block; }
+
+/* ===== REVEAL ANIMATIONS ===== */
+.reveal {
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-left {
+  opacity: 0; transform: translateX(-50px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+.reveal-right {
+  opacity: 0; transform: translateX(50px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh; position: relative;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 60% 40%, rgba(201,168,76,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 80% at 10% 80%, rgba(201,168,76,0.04) 0%, transparent 50%),
+    linear-gradient(160deg, #050505 0%, #0D0D0D 50%, #070707 100%);
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
+}
+.hero-car-silhouette {
+  position: absolute; right: -5%; bottom: 0;
+  width: 70%; max-width: 900px;
+  opacity: 0.12;
+  animation: float 6s ease-in-out infinite;
+}
+@keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+/* SVG Car Shape */
+.car-svg {
+  width: 100%; filter: drop-shadow(0 0 60px rgba(201,168,76,0.3));
+}
+.hero-content {
+  position: relative; z-index: 2;
+  max-width: 1400px; width: 100%; padding: 0 4rem;
+  padding-top: 120px;
+}
+.hero-eyebrow {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem; letter-spacing: 0.45em;
+  color: var(--gold); text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 1rem;
+  animation: fadeInLeft 1s ease 2s both;
+}
+.hero-eyebrow::before {
+  content: ''; width: 40px; height: 1px; background: var(--gold);
+}
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3.5rem, 8vw, 9rem);
+  font-weight: 300; line-height: 0.92;
+  color: var(--white); margin-bottom: 2rem;
+  animation: fadeInLeft 1s ease 2.2s both;
+}
+.hero-title em {
+  font-style: italic; color: var(--gold);
+  display: block;
+}
+.hero-title .outline-text {
+  -webkit-text-stroke: 1px rgba(245,243,238,0.3);
+  color: transparent;
+}
+.hero-desc {
+  max-width: 500px;
+  font-size: 1rem; line-height: 1.8;
+  color: var(--text-muted); margin-bottom: 3rem;
+  animation: fadeInLeft 1s ease 2.4s both;
+}
+.hero-actions {
+  display: flex; gap: 1.5rem; align-items: center;
+  animation: fadeInLeft 1s ease 2.6s both;
+  flex-wrap: wrap;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 0.75rem;
+  background: var(--gold); color: var(--black);
+  padding: 1rem 2.5rem; font-size: 0.75rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  font-weight: 500; text-decoration: none; cursor: none;
+  border: none; transition: all 0.3s ease;
+  position: relative; overflow: hidden;
+}
+.btn-primary::before {
+  content: ''; position: absolute; top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+.btn-primary:hover::before { left: 100%; }
+.btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 0.75rem;
+  color: var(--offwhite); font-size: 0.75rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  text-decoration: none; cursor: none;
+  border: none; background: none;
+  transition: color 0.3s; font-family: 'DM Sans', sans-serif; font-weight: 400;
+}
+.btn-secondary:hover { color: var(--gold); }
+.btn-secondary svg { transition: transform 0.3s; }
+.btn-secondary:hover svg { transform: translateX(6px); }
+.hero-stats {
+  position: absolute; bottom: 4rem; right: 4rem; z-index: 2;
+  display: flex; gap: 3rem;
+  animation: fadeIn 1s ease 3s both;
+}
+.stat { text-align: right; }
+.stat-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem; color: var(--gold); letter-spacing: 0.05em;
+  line-height: 1;
+}
+.stat-label {
+  font-size: 0.65rem; letter-spacing: 0.25em;
+  color: var(--text-muted); text-transform: uppercase;
+}
+.hero-scroll {
+  position: absolute; bottom: 4rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+  animation: fadeIn 1s ease 3.2s both; z-index: 2;
+}
+.scroll-line {
+  width: 1px; height: 60px; background: linear-gradient(to bottom, transparent, var(--gold));
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+.scroll-text {
+  font-size: 0.6rem; letter-spacing: 0.35em; color: var(--text-muted);
+  text-transform: uppercase; writing-mode: vertical-rl;
+}
+@keyframes scrollPulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+@keyframes fadeInLeft { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+
+/* ===== SECTION STYLES ===== */
+section { padding: 8rem 4rem; }
+.section-label {
+  font-size: 0.65rem; letter-spacing: 0.45em;
+  color: var(--gold); text-transform: uppercase;
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.section-label::before { content: ''; width: 30px; height: 1px; background: var(--gold); }
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 300; line-height: 1.05;
+  color: var(--white);
+}
+.section-title em { font-style: italic; color: var(--gold); }
+.divider {
+  width: 60px; height: 1px; background: var(--gold);
+  margin: 2rem 0;
+}
+.max-container { max-width: 1400px; margin: 0 auto; }
+
+/* ===== MARQUEE ===== */
+.marquee-strip {
+  background: var(--surface);
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  padding: 1.2rem 0; overflow: hidden;
+}
+.marquee-track {
+  display: flex; gap: 4rem; white-space: nowrap;
+  animation: marquee 20s linear infinite;
+}
+.marquee-item {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.9rem; letter-spacing: 0.3em;
+  color: var(--text-muted); display: flex; align-items: center; gap: 2rem;
+  flex-shrink: 0;
+}
+.marquee-dot { width: 4px; height: 4px; background: var(--gold); border-radius: 50%; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ===== FEATURED CARS ===== */
+.cars-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  margin-top: 4rem;
+}
+.car-card {
+  position: relative; overflow: hidden;
+  background: var(--surface); cursor: none;
+  height: 480px;
+}
+.car-card:first-child { grid-column: span 2; }
+.car-img-wrap {
+  position: absolute; inset: 0;
+  overflow: hidden;
+}
+.car-img-bg {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.8s var(--transition);
+  transform-origin: center;
+}
+.car-card:hover .car-img-bg { transform: scale(1.08); }
+.car-img-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+/* Scratch/reveal overlay */
+.scratch-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%);
+  transform-origin: left;
+  transition: transform 0.7s cubic-bezier(0.76,0,0.24,1);
+  z-index: 2;
+}
+.car-card:hover .scratch-overlay { transform: scaleX(0); }
+.car-gradient {
+  position: absolute; inset: 0; z-index: 3;
+  background: linear-gradient(to top, rgba(5,5,5,0.95) 0%, rgba(5,5,5,0.4) 40%, transparent 70%);
+}
+.car-content {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 2.5rem; z-index: 4;
+}
+.car-brand {
+  font-size: 0.6rem; letter-spacing: 0.4em;
+  color: var(--gold); text-transform: uppercase; margin-bottom: 0.5rem;
+}
+.car-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem; font-weight: 300; color: var(--white);
+  line-height: 1.1; margin-bottom: 1rem;
+}
+.car-card:first-child .car-name { font-size: 2.8rem; }
+.car-specs {
+  display: flex; gap: 2rem;
+  opacity: 0; transform: translateY(20px);
+  transition: all 0.5s ease 0.1s;
+}
+.car-card:hover .car-specs { opacity: 1; transform: translateY(0); }
+.spec { }
+.spec-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem; color: var(--gold); letter-spacing: 0.05em;
+}
+.spec-key {
+  font-size: 0.6rem; letter-spacing: 0.2em; color: var(--text-muted); text-transform: uppercase;
+}
+.car-price {
+  position: absolute; top: 1.5rem; right: 1.5rem; z-index: 4;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(10px);
+  border: 1px solid var(--border); padding: 0.5rem 1rem;
+  font-size: 0.8rem; color: var(--gold);
+  font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.1em;
+}
+.car-tag {
+  position: absolute; top: 1.5rem; left: 1.5rem; z-index: 4;
+  background: var(--gold); padding: 0.3rem 0.8rem;
+  font-size: 0.6rem; letter-spacing: 0.2em; color: var(--black);
+  text-transform: uppercase; font-weight: 500;
+}
+/* Car visual patterns using CSS */
+.car-visual {
+  width: 100%; height: 100%;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.cv1 { background: linear-gradient(135deg, #0a0a0a 0%, #1a1208 50%, #0a0a0a 100%); }
+.cv2 { background: linear-gradient(135deg, #0a0a12 0%, #080812 50%, #0a0a0a 100%); }
+.cv3 { background: linear-gradient(135deg, #100808 0%, #0a0505 50%, #0a0a0a 100%); }
+.cv4 { background: linear-gradient(135deg, #080a0a 0%, #051010 50%, #0a0a0a 100%); }
+.car-svg-inline { width: 80%; max-width: 500px; filter: drop-shadow(0 10px 40px rgba(201,168,76,0.2)); }
+
+/* ===== SERVICES ===== */
+.services-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+  background: var(--border); margin-top: 4rem;
+}
+.service-card {
+  background: var(--surface); padding: 3rem 2rem;
+  position: relative; overflow: hidden; cursor: none;
+  transition: background 0.4s;
+}
+.service-card::before {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 100%; height: 2px; background: var(--gold);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.5s ease;
+}
+.service-card:hover { background: var(--surface2); }
+.service-card:hover::before { transform: scaleX(1); }
+.service-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 4rem; color: rgba(201,168,76,0.08);
+  line-height: 1; margin-bottom: 1.5rem;
+  transition: color 0.4s;
+}
+.service-card:hover .service-num { color: rgba(201,168,76,0.15); }
+.service-icon {
+  width: 48px; height: 48px; margin-bottom: 1.5rem;
+  color: var(--gold);
+}
+.service-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem; font-weight: 400;
+  color: var(--white); margin-bottom: 1rem;
+}
+.service-desc {
+  font-size: 0.85rem; line-height: 1.8; color: var(--text-muted);
+}
+.service-link {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  margin-top: 1.5rem; font-size: 0.7rem; letter-spacing: 0.2em;
+  color: var(--gold); text-transform: uppercase; text-decoration: none; cursor: none;
+}
+
+/* ===== GALLERY ===== */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: repeat(3, 200px);
+  gap: 4px; margin-top: 4rem;
+}
+.g-item {
+  overflow: hidden; position: relative; cursor: none;
+}
+.g-item:nth-child(1) { grid-column: span 5; grid-row: span 2; }
+.g-item:nth-child(2) { grid-column: span 4; grid-row: span 1; }
+.g-item:nth-child(3) { grid-column: span 3; grid-row: span 2; }
+.g-item:nth-child(4) { grid-column: span 4; grid-row: span 1; }
+.g-item:nth-child(5) { grid-column: span 3; grid-row: span 1; }
+.g-item:nth-child(6) { grid-column: span 4; grid-row: span 1; }
+.g-item:nth-child(7) { grid-column: span 5; grid-row: span 1; }
+.g-inner {
+  width: 100%; height: 100%;
+  transition: transform 0.6s var(--transition);
+}
+.g-item:hover .g-inner { transform: scale(1.06); }
+.g-overlay {
+  position: absolute; inset: 0;
+  background: rgba(5,5,5,0.4);
+  opacity: 0; transition: opacity 0.4s;
+  display: flex; align-items: center; justify-content: center;
+}
+.g-item:hover .g-overlay { opacity: 1; }
+.g-overlay-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; color: var(--white); font-style: italic;
+  text-align: center; padding: 1rem;
+}
+/* Gallery visual backgrounds */
+.gb1 { background: linear-gradient(145deg, #1a1208, #0d0d0d, #150e04); }
+.gb2 { background: linear-gradient(145deg, #0a0a12, #0d0d1a, #080810); }
+.gb3 { background: linear-gradient(145deg, #100808, #1a0505, #080508); }
+.gb4 { background: linear-gradient(145deg, #080a10, #0a0f1a, #05080d); }
+.gb5 { background: linear-gradient(145deg, #120d04, #1a1008, #0d0a02); }
+.gb6 { background: linear-gradient(145deg, #050f0a, #081208, #03070a); }
+.gb7 { background: linear-gradient(145deg, #0d0510, #100818, #080510); }
+
+/* ===== ABOUT SECTION ===== */
+.about-layout {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;
+}
+.about-visual {
+  position: relative; height: 600px;
+}
+.about-main-img {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #1a1208 0%, #0a0a0a 50%, #100d04 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.about-badge {
+  position: absolute; bottom: -2rem; right: -2rem;
+  width: 160px; height: 160px;
+  background: var(--gold);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  z-index: 2;
+}
+.badge-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.5rem; color: var(--black); line-height: 1;
+}
+.badge-text {
+  font-size: 0.6rem; letter-spacing: 0.2em;
+  color: rgba(5,5,5,0.7); text-align: center;
+  text-transform: uppercase;
+}
+.about-accent {
+  position: absolute; top: 3rem; left: -2rem;
+  width: 80px; height: 200px;
+  border: 1px solid var(--gold-dim); z-index: -1;
+}
+.about-text p {
+  font-size: 1rem; line-height: 1.9;
+  color: var(--text-muted); margin-bottom: 1.5rem;
+}
+.about-text p strong { color: var(--white); font-weight: 400; }
+.values-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem;
+}
+.value-item { }
+.value-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; color: var(--white); margin-bottom: 0.4rem;
+}
+.value-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.7; }
+
+/* ===== PARALLAX STRIP ===== */
+.parallax-strip {
+  height: 500px; position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.parallax-bg {
+  position: absolute; inset: -100px;
+  background: linear-gradient(135deg, #0d0d0d 0%, #1a1208 30%, #0a0a0a 70%, #12100a 100%);
+  will-change: transform;
+}
+.parallax-overlay {
+  position: absolute; inset: 0;
+  background: rgba(5,5,5,0.7);
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  gap: 2rem;
+}
+.parallax-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.5rem, 6vw, 6rem);
+  font-weight: 300; text-align: center;
+  color: var(--white);
+}
+.parallax-title em { font-style: italic; color: var(--gold); }
+
+/* ===== BOOKING FORM ===== */
+.booking-layout {
+  display: grid; grid-template-columns: 1fr 1.2fr; gap: 6rem; align-items: start;
+}
+.form-group { margin-bottom: 2rem; }
+.form-label {
+  display: block; font-size: 0.65rem; letter-spacing: 0.3em;
+  color: var(--gold); text-transform: uppercase; margin-bottom: 0.75rem;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%; background: transparent;
+  border: none; border-bottom: 1px solid rgba(255,255,255,0.15);
+  padding: 0.75rem 0; color: var(--white);
+  font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 300;
+  outline: none; transition: border-color 0.3s; cursor: none;
+  appearance: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--gold);
+}
+.form-input::placeholder, .form-textarea::placeholder {
+  color: rgba(255,255,255,0.25);
+}
+.form-select { background: transparent; color: var(--text-muted); }
+.form-select option { background: var(--surface); }
+.form-textarea { resize: none; height: 120px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.booking-info {}
+.info-block {
+  padding: 2rem; border: 1px solid var(--border);
+  margin-bottom: 1.5rem; position: relative; overflow: hidden;
+}
+.info-block::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 3px; height: 100%; background: var(--gold);
+}
+.info-block-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem; color: var(--white); margin-bottom: 0.5rem;
+}
+.info-block-text { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; }
+
+/* ===== CONTACT ===== */
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; margin-top: 4rem;
+}
+.contact-info { }
+.contact-item { margin-bottom: 2.5rem; }
+.contact-label {
+  font-size: 0.6rem; letter-spacing: 0.35em; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 0.5rem;
+}
+.contact-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem; color: var(--white); font-weight: 300;
+}
+.map-placeholder {
+  height: 400px; background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.map-inner {
+  width: 100%; height: 100%;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 40px,
+    rgba(201,168,76,0.05) 40px, rgba(201,168,76,0.05) 41px
+  ),
+  repeating-linear-gradient(
+    90deg, transparent, transparent 40px,
+    rgba(201,168,76,0.05) 40px, rgba(201,168,76,0.05) 41px
+  );
+  display: flex; align-items: center; justify-content: center;
+}
+.map-pin {
+  width: 20px; height: 20px; background: var(--gold);
+  border-radius: 50% 50% 50% 0; transform: rotate(-45deg);
+  position: relative;
+}
+.map-pin::after {
+  content: ''; position: absolute; inset: 4px;
+  background: var(--black); border-radius: 50%;
+}
+
+/* ===== TESTIMONIALS ===== */
+.testimonials-track {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; margin-top: 4rem;
+}
+.testimonial {
+  padding: 2.5rem; border: 1px solid var(--border); position: relative;
+  transition: border-color 0.4s;
+}
+.testimonial:hover { border-color: var(--gold); }
+.testimonial::before {
+  content: '"';
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 6rem; color: var(--gold); opacity: 0.2;
+  position: absolute; top: 0; left: 1.5rem; line-height: 1;
+}
+.testimonial-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem; font-style: italic;
+  color: var(--offwhite); line-height: 1.8; margin-bottom: 2rem;
+}
+.testimonial-author { display: flex; align-items: center; gap: 1rem; }
+.author-avatar {
+  width: 48px; height: 48px; border-radius: 50%;
+  border: 1px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; color: var(--gold);
+  background: var(--surface2);
+}
+.author-name { font-size: 0.85rem; color: var(--white); }
+.author-title { font-size: 0.7rem; color: var(--text-muted); }
+.star-row { display: flex; gap: 3px; margin-bottom: 0.5rem; }
+.star { color: var(--gold); font-size: 0.7rem; }
+
+/* ===== FOOTER ===== */
+footer {
+  background: var(--deep); border-top: 1px solid var(--border);
+  padding: 5rem 4rem 2rem;
+}
+.footer-top {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 4rem; margin-bottom: 4rem;
+}
+.footer-brand .logo { font-size: 1.5rem; margin-bottom: 1.5rem; display: inline-flex; }
+.footer-brand p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.8; max-width: 280px; }
+.footer-col-title {
+  font-size: 0.65rem; letter-spacing: 0.3em; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 1.5rem;
+}
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+.footer-links a {
+  color: var(--text-muted); text-decoration: none; font-size: 0.85rem;
+  transition: color 0.3s; cursor: none;
+}
+.footer-links a:hover { color: var(--white); }
+.footer-bottom {
+  border-top: 1px solid var(--border); padding-top: 2rem;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-copy { font-size: 0.75rem; color: var(--text-muted); }
+.social-row { display: flex; gap: 1rem; }
+.social-btn {
+  width: 36px; height: 36px; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); text-decoration: none; cursor: none;
+  transition: all 0.3s; font-size: 0.75rem;
+}
+.social-btn:hover { border-color: var(--gold); color: var(--gold); }
+.footer-animate {
+  animation: footerReveal 1s ease both;
+}
+@keyframes footerReveal {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== GLASSMORPHISM CARDS ===== */
+.glass-card {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 0;
+}
+
+/* ===== PAGE TRANSITION ===== */
+.page-transition {
+  position: fixed; inset: 0; background: var(--black);
+  z-index: 5000; transform: scaleY(0); transform-origin: bottom;
+  transition: transform 0.5s cubic-bezier(0.76,0,0.24,1);
+  pointer-events: none;
+}
+.page-transition.enter { transform: scaleY(1); transform-origin: bottom; }
+.page-transition.exit { transform: scaleY(0); transform-origin: top; }
+
+/* ===== NOTIFICATION ===== */
+.toast {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 8000;
+  background: var(--gold); color: var(--black);
+  padding: 1rem 2rem; font-size: 0.8rem; letter-spacing: 0.1em;
+  transform: translateY(100px); opacity: 0;
+  transition: all 0.5s var(--transition);
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+
+/* ===== MOUSE GLOW ===== */
+.mouse-glow {
+  position: fixed; width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 70%);
+  border-radius: 50%; pointer-events: none; z-index: 1;
+  transform: translate(-50%,-50%); transition: all 0.15s ease;
+}
+
+/* ===== CAR SVG DESIGNS ===== */
+.car-icon-svg {
+  width: 85%; filter: drop-shadow(0 0 30px rgba(201,168,76,0.15));
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1100px) {
+  .cars-grid { grid-template-columns: 1fr 1fr; }
+  .car-card:first-child { grid-column: span 2; }
+  .services-grid { grid-template-columns: 1fr 1fr; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 900px) {
+  header { padding: 1.5rem 2rem; }
+  header.scrolled { padding: 1rem 2rem; }
+  nav { display: none; }
+  .hamburger { display: flex; }
+  section { padding: 5rem 2rem; }
+  .hero-content { padding: 0 2rem; padding-top: 120px; }
+  .hero-stats { bottom: 2rem; right: 2rem; gap: 1.5rem; }
+  .hero-scroll { display: none; }
+  .cars-grid { grid-template-columns: 1fr; }
+  .car-card:first-child { grid-column: span 1; }
+  .about-layout { grid-template-columns: 1fr; gap: 3rem; }
+  .booking-layout { grid-template-columns: 1fr; gap: 3rem; }
+  .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .testimonials-track { grid-template-columns: 1fr; }
+  .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+  .g-item { grid-column: span 1 !important; grid-row: span 1 !important; height: 200px; }
+  .footer-top { grid-template-columns: 1fr; gap: 2.5rem; }
+  .form-row { grid-template-columns: 1fr; gap: 0; }
+  .hero-stats { display: none; }
+  .values-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .hero-title { font-size: 2.8rem; }
+  .hero-actions { flex-direction: column; align-items: flex-start; }
+  .parallax-strip { height: 300px; }
+  .about-badge { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+<div class="mouse-glow" id="mouseGlow"></div>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-logo">
+    <span>A</span><span>P</span><span>E</span><span>X</span>
+  </div>
+  <div class="loader-tagline">Precision. Power. Prestige.</div>
+  <div class="loader-bar"></div>
+</div>
+
+<!-- PAGE TRANSITION -->
+<div class="page-transition" id="pageTransition"></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">✦ Your request has been received. We'll contact you shortly.</div>
+
+<!-- HEADER -->
+<header id="header">
+  <a href="#" class="logo" onclick="navigate('home'); return false;">
+    <div class="logo-icon"></div>
+    APEX MOTORS
+  </a>
+  <nav>
+    <a href="#" onclick="navigate('home'); return false;">Home</a>
+    <a href="#" onclick="navigate('fleet'); return false;">Our Fleet</a>
+    <a href="#" onclick="navigate('services'); return false;">Services</a>
+    <a href="#" onclick="navigate('about'); return false;">About</a>
+    <a href="#" onclick="navigate('contact'); return false;">Contact</a>
+    <a href="#" class="nav-cta" onclick="navigate('booking'); return false;">Book Test Drive</a>
+  </nav>
+  <div class="hamburger" id="hamburger" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </div>
+</header>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#" onclick="navigate('home'); toggleMobileNav(); return false;">Home</a>
+  <a href="#" onclick="navigate('fleet'); toggleMobileNav(); return false;">Fleet</a>
+  <a href="#" onclick="navigate('services'); toggleMobileNav(); return false;">Services</a>
+  <a href="#" onclick="navigate('about'); toggleMobileNav(); return false;">About</a>
+  <a href="#" onclick="navigate('contact'); toggleMobileNav(); return false;">Contact</a>
+  <a href="#" onclick="navigate('booking'); toggleMobileNav(); return false;">Book Drive</a>
+</div>
+
+<!-- ==================== HOME PAGE ==================== -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+
+    <!-- Animated car silhouette -->
+    <div class="hero-car-silhouette">
+      <svg class="car-svg" viewBox="0 0 900 350" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Sports car silhouette -->
+        <path d="M80 240 L100 200 L180 170 L280 140 L400 120 L520 125 L620 140 L700 165 L760 190 L800 215 L820 240 Z" fill="rgba(201,168,76,0.6)" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+        <!-- Roof -->
+        <path d="M250 140 L310 90 L430 70 L540 75 L620 100 L650 130" fill="rgba(201,168,76,0.4)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+        <!-- Windows -->
+        <path d="M265 138 L320 95 L420 80 L490 82 L500 138 Z" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.3)" stroke-width="0.5"/>
+        <path d="M510 138 L507 83 L540 82 L610 105 L635 130 L610 138 Z" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.3)" stroke-width="0.5"/>
+        <!-- Wheel arches -->
+        <circle cx="210" cy="240" r="55" fill="none" stroke="rgba(201,168,76,0.5)" stroke-width="2"/>
+        <circle cx="210" cy="240" r="35" fill="rgba(20,16,8,0.8)" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+        <circle cx="210" cy="240" r="15" fill="rgba(201,168,76,0.3)"/>
+        <circle cx="670" cy="240" r="55" fill="none" stroke="rgba(201,168,76,0.5)" stroke-width="2"/>
+        <circle cx="670" cy="240" r="35" fill="rgba(20,16,8,0.8)" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+        <circle cx="670" cy="240" r="15" fill="rgba(201,168,76,0.3)"/>
+        <!-- Ground line -->
+        <line x1="50" y1="295" x2="850" y2="295" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <!-- Headlights glow -->
+        <ellipse cx="810" cy="200" rx="20" ry="8" fill="rgba(201,168,76,0.3)"/>
+        <ellipse cx="85" cy="210" rx="15" ry="6" fill="rgba(201,168,76,0.2)"/>
+        <!-- Detail lines -->
+        <line x1="160" y1="180" x2="720" y2="175" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+        <line x1="180" y1="210" x2="750" y2="205" stroke="rgba(201,168,76,0.1)" stroke-width="0.5"/>
+      </svg>
+    </div>
+
+    <div class="hero-content max-container">
+      <div class="hero-eyebrow">Est. 1987 — Automotive Excellence</div>
+      <h1 class="hero-title">
+        Drive the
+        <em>Extraordinary</em>
+        <span class="outline-text">Legend</span>
+      </h1>
+      <p class="hero-desc">Where engineering becomes art. Each vehicle in our curated collection represents the pinnacle of automotive achievement — machines built not just for roads, but for the pursuit of perfection.</p>
+      <div class="hero-actions">
+        <a href="#" class="btn-primary" onclick="navigate('fleet'); return false;">
+          Explore Fleet
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+        <a href="#" class="btn-secondary" onclick="navigate('booking'); return false;">
+          Book Test Drive
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">247</div>
+        <div class="stat-label">Vehicles Sold</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">36</div>
+        <div class="stat-label">Years Legacy</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">98%</div>
+        <div class="stat-label">Client Satisfaction</div>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <div class="scroll-text">Scroll</div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-strip">
+    <div class="marquee-track">
+      <div class="marquee-item">Lamborghini Huracán <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Ferrari SF90 <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Porsche 911 GT3 <span class="marquee-dot"></span></div>
+      <div class="marquee-item">McLaren 720S <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Aston Martin DB12 <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Bentley Continental GT <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Rolls-Royce Spectre <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Bugatti Chiron <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Lamborghini Huracán <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Ferrari SF90 <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Porsche 911 GT3 <span class="marquee-dot"></span></div>
+      <div class="marquee-item">McLaren 720S <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Aston Martin DB12 <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Bentley Continental GT <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Rolls-Royce Spectre <span class="marquee-dot"></span></div>
+      <div class="marquee-item">Bugatti Chiron <span class="marquee-dot"></span></div>
+    </div>
+  </div>
+
+  <!-- FEATURED CARS -->
+  <section style="padding: 6rem 4rem;">
+    <div class="max-container">
+      <div class="section-label reveal">Featured Collection</div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem;">
+        <h2 class="section-title reveal">Icons of the<br><em>Open Road</em></h2>
+        <a href="#" class="btn-secondary reveal" onclick="navigate('fleet'); return false;">
+          View All Vehicles
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+      </div>
+      <div class="cars-grid reveal">
+
+        <!-- Card 1 - Featured Large -->
+        <div class="car-card">
+          <div class="car-img-wrap">
+            <div class="car-visual cv1">
+              <div class="scratch-overlay"></div>
+              <svg class="car-icon-svg" viewBox="0 0 700 320" fill="none">
+                <defs>
+                  <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.8"/>
+                    <stop offset="100%" stop-color="#8B6F35" stop-opacity="0.4"/>
+                  </linearGradient>
+                </defs>
+                <path d="M50 230 L80 185 L160 155 L270 125 L380 110 L490 112 L590 130 L660 160 L690 200 L700 230 Z" fill="url(#g1)"/>
+                <path d="M220 125 L275 75 L380 58 L480 62 L555 88 L580 120" fill="rgba(201,168,76,0.3)" stroke="#C9A84C" stroke-width="0.8"/>
+                <path d="M235 122 L282 78 L375 63 L465 66 L530 92 L545 122 Z" fill="rgba(201,168,76,0.12)" stroke="#C9A84C" stroke-width="0.6"/>
+                <path d="M556 122 L552 93 L582 105 L600 120 Z" fill="rgba(201,168,76,0.12)" stroke="#C9A84C" stroke-width="0.6"/>
+                <circle cx="185" cy="232" r="48" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+                <circle cx="185" cy="232" r="32" fill="#0a0a0a" stroke="#C9A84C" stroke-width="1"/>
+                <circle cx="185" cy="232" r="14" fill="rgba(201,168,76,0.4)"/>
+                <circle cx="580" cy="232" r="48" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+                <circle cx="580" cy="232" r="32" fill="#0a0a0a" stroke="#C9A84C" stroke-width="1"/>
+                <circle cx="580" cy="232" r="14" fill="rgba(201,168,76,0.4)"/>
+                <line x1="30" y1="280" x2="670" y2="280" stroke="rgba(201,168,76,0.2)" stroke-width="0.8"/>
+                <path d="M680 185 L700 192" stroke="#C9A84C" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="car-gradient"></div>
+          <div class="car-tag">Flagship</div>
+          <div class="car-price">₹ 4.2 Cr</div>
+          <div class="car-content">
+            <div class="car-brand">Ferrari</div>
+            <div class="car-name">SF90 Stradale</div>
+            <div class="car-specs">
+              <div class="spec"><div class="spec-val">986</div><div class="spec-key">Horsepower</div></div>
+              <div class="spec"><div class="spec-val">2.5s</div><div class="spec-key">0–100 kmh</div></div>
+              <div class="spec"><div class="spec-val">340</div><div class="spec-key">Top Speed</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="car-card">
+          <div class="car-img-wrap">
+            <div class="car-visual cv2">
+              <div class="scratch-overlay"></div>
+              <svg class="car-icon-svg" viewBox="0 0 600 280" fill="none">
+                <defs><linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#A0B4D4" stop-opacity="0.6"/><stop offset="100%" stop-color="#5080A0" stop-opacity="0.3"/></linearGradient></defs>
+                <path d="M40 210 L70 170 L150 140 L255 115 L360 105 L460 108 L540 128 L590 165 L600 210 Z" fill="url(#g2)"/>
+                <path d="M200 115 L255 70 L360 55 L450 58 L510 80 L530 108" fill="rgba(160,180,212,0.25)" stroke="#A0B4D4" stroke-width="0.8"/>
+                <path d="M214 112 L260 74 L355 60 L442 63 L498 84 L510 112 Z" fill="rgba(160,180,212,0.1)" stroke="#A0B4D4" stroke-width="0.5"/>
+                <circle cx="160" cy="212" r="42" fill="none" stroke="#A0B4D4" stroke-width="1.2"/>
+                <circle cx="160" cy="212" r="28" fill="#0a0a12" stroke="#A0B4D4" stroke-width="0.8"/>
+                <circle cx="510" cy="212" r="42" fill="none" stroke="#A0B4D4" stroke-width="1.2"/>
+                <circle cx="510" cy="212" r="28" fill="#0a0a12" stroke="#A0B4D4" stroke-width="0.8"/>
+                <line x1="20" y1="254" x2="580" y2="254" stroke="rgba(160,180,212,0.2)" stroke-width="0.6"/>
+              </svg>
+            </div>
+          </div>
+          <div class="car-gradient"></div>
+          <div class="car-price">₹ 2.8 Cr</div>
+          <div class="car-content">
+            <div class="car-brand">Porsche</div>
+            <div class="car-name">911 GT3 RS</div>
+            <div class="car-specs">
+              <div class="spec"><div class="spec-val">520</div><div class="spec-key">Horsepower</div></div>
+              <div class="spec"><div class="spec-val">3.2s</div><div class="spec-key">0–100 kmh</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="car-card">
+          <div class="car-img-wrap">
+            <div class="car-visual cv3">
+              <div class="scratch-overlay"></div>
+              <svg class="car-icon-svg" viewBox="0 0 600 280" fill="none">
+                <defs><linearGradient id="g3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#D4A0A0" stop-opacity="0.6"/><stop offset="100%" stop-color="#8B3030" stop-opacity="0.3"/></linearGradient></defs>
+                <path d="M30 215 L65 168 L145 138 L260 110 L370 100 L475 104 L555 125 L595 165 L600 215 Z" fill="url(#g3)"/>
+                <path d="M210 110 L270 62 L375 48 L465 52 L525 76 L545 108" fill="rgba(212,160,160,0.2)" stroke="#D4A0A0" stroke-width="0.8"/>
+                <path d="M224 108 L274 66 L370 54 L456 57 L508 78 L520 108 Z" fill="rgba(212,160,160,0.08)" stroke="#D4A0A0" stroke-width="0.5"/>
+                <circle cx="160" cy="217" r="44" fill="none" stroke="#D4A0A0" stroke-width="1.2"/>
+                <circle cx="160" cy="217" r="28" fill="#100a0a" stroke="#D4A0A0" stroke-width="0.8"/>
+                <circle cx="510" cy="217" r="44" fill="none" stroke="#D4A0A0" stroke-width="1.2"/>
+                <circle cx="510" cy="217" r="28" fill="#100a0a" stroke="#D4A0A0" stroke-width="0.8"/>
+              </svg>
+            </div>
+          </div>
+          <div class="car-gradient"></div>
+          <div class="car-tag">New Arrival</div>
+          <div class="car-price">₹ 3.6 Cr</div>
+          <div class="car-content">
+            <div class="car-brand">Lamborghini</div>
+            <div class="car-name">Huracán Tecnica</div>
+            <div class="car-specs">
+              <div class="spec"><div class="spec-val">640</div><div class="spec-key">Horsepower</div></div>
+              <div class="spec"><div class="spec-val">3.0s</div><div class="spec-key">0–100 kmh</div></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PARALLAX STRIP -->
+  <div class="parallax-strip">
+    <div class="parallax-bg" id="parallaxBg">
+      <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.15" viewBox="0 0 1400 600" preserveAspectRatio="xMidYMid slice">
+        <circle cx="200" cy="300" r="200" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+        <circle cx="200" cy="300" r="150" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="0.5"/>
+        <circle cx="1200" cy="300" r="180" fill="none" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+        <line x1="0" y1="300" x2="1400" y2="300" stroke="rgba(201,168,76,0.1)" stroke-width="0.5"/>
+      </svg>
+    </div>
+    <div class="parallax-overlay">
+      <h2 class="parallax-title reveal">Performance<br><em>Without Compromise</em></h2>
+      <a href="#" class="btn-primary reveal" onclick="navigate('fleet'); return false;">Discover Our Fleet</a>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <section>
+    <div class="max-container">
+      <div class="section-label reveal">Client Testimonials</div>
+      <h2 class="section-title reveal">Voices of <em>Excellence</em></h2>
+      <div class="testimonials-track">
+        <div class="testimonial reveal">
+          <div class="star-row">★★★★★</div>
+          <p class="testimonial-text">The experience at APEX MOTORS transcended any dealership I've ever visited. The team's knowledge and passion for these machines is unmatched. My Porsche GT3 arrived better than promised.</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">RK</div>
+            <div><div class="author-name">Rajesh Khanna</div><div class="author-title">Entrepreneur, Mumbai</div></div>
+          </div>
+        </div>
+        <div class="testimonial reveal" style="transition-delay:0.15s">
+          <div class="star-row">★★★★★</div>
+          <p class="testimonial-text">I've purchased three vehicles from APEX over the years. Each time, the white-glove service and curated selection make the process feel like haute couture — not automobile commerce.</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">PS</div>
+            <div><div class="author-name">Priya Sharma</div><div class="author-title">CEO, Delhi</div></div>
+          </div>
+        </div>
+        <div class="testimonial reveal" style="transition-delay:0.3s">
+          <div class="star-row">★★★★★</div>
+          <p class="testimonial-text">When I walked in requesting something special, they understood immediately. The Ferrari they sourced for me was beyond what I imagined. APEX doesn't sell cars — they craft experiences.</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">AM</div>
+            <div><div class="author-name">Arjun Malhotra</div><div class="author-title">Investor, Bangalore</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK SERVICES -->
+  <section style="padding: 6rem 4rem; background: var(--surface);">
+    <div class="max-container">
+      <div class="section-label reveal">What We Offer</div>
+      <h2 class="section-title reveal">World-Class <em>Services</em></h2>
+      <div class="services-grid">
+        <div class="service-card reveal">
+          <div class="service-num">01</div>
+          <svg class="service-icon" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="10" stroke="currentColor" stroke-width="1.5"/><path d="M24 4v4M24 40v4M4 24h4M40 24h4M7.7 7.7l2.8 2.8M37.5 37.5l2.8 2.8M37.5 7.7l-2.8 2.8M10.5 37.5l-2.8 2.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <div class="service-name">Bespoke Sourcing</div>
+          <p class="service-desc">Can't find your dream vehicle? Our global network of partners ensures we can source any configuration, any colour, any specification you desire.</p>
+          <a href="#" class="service-link" onclick="navigate('services'); return false;">Learn More →</a>
+        </div>
+        <div class="service-card reveal" style="transition-delay:0.1s">
+          <div class="service-num">02</div>
+          <svg class="service-icon" viewBox="0 0 48 48" fill="none"><path d="M8 20h32M8 28h32M12 12l4 8M32 12l4 8M12 36l4-8M32 36l4-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <div class="service-name">Track Experience</div>
+          <p class="service-desc">Push your vehicle to its limits on our curated track days at India's premier circuits — guided by professional racing drivers.</p>
+          <a href="#" class="service-link" onclick="navigate('services'); return false;">Learn More →</a>
+        </div>
+        <div class="service-card reveal" style="transition-delay:0.2s">
+          <div class="service-num">03</div>
+          <svg class="service-icon" viewBox="0 0 48 48" fill="none"><path d="M24 8l4 8h8l-6 6 2 8-8-4-8 4 2-8-6-6h8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="24" cy="38" r="4" stroke="currentColor" stroke-width="1.5"/></svg>
+          <div class="service-name">Concierge Service</div>
+          <p class="service-desc">Your dedicated relationship manager handles everything from insurance to logistics — available 24/7, 365 days a year.</p>
+          <a href="#" class="service-link" onclick="navigate('services'); return false;">Learn More →</a>
+        </div>
+        <div class="service-card reveal" style="transition-delay:0.3s">
+          <div class="service-num">04</div>
+          <svg class="service-icon" viewBox="0 0 48 48" fill="none"><rect x="8" y="14" width="32" height="20" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 22h32M16 30h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <div class="service-name">Finance & Leasing</div>
+          <p class="service-desc">Bespoke financial solutions crafted around your requirements — from tailored financing to flexible long-term lease agreements.</p>
+          <a href="#" class="service-link" onclick="navigate('services'); return false;">Learn More →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ==================== FLEET PAGE ==================== -->
+<div class="page" id="page-fleet">
+  <div style="padding-top: 120px;">
+    <section>
+      <div class="max-container">
+        <div class="section-label reveal">Our Collection</div>
+        <h2 class="section-title reveal">The <em>Ultimate</em> Fleet</h2>
+        <p class="reveal" style="max-width:600px;color:var(--text-muted);line-height:1.8;margin-top:1rem;">Every vehicle in our showroom represents the summit of automotive engineering. Individually selected, immaculately prepared, ready to be yours.</p>
+        <div class="divider reveal"></div>
+
+        <!-- Full fleet grid -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:2rem;" class="reveal">
+
+          <!-- Car 1 -->
+          <div class="car-card" style="height:400px;">
+            <div class="car-img-wrap">
+              <div class="car-visual cv1">
+                <div class="scratch-overlay"></div>
+                <svg class="car-icon-svg" viewBox="0 0 600 280" fill="none">
+                  <path d="M40 220 L70 178 L148 148 L255 120 L365 108 L465 112 L548 132 L590 168 L600 220 Z" fill="rgba(201,168,76,0.5)"/>
+                  <path d="M205 120 L262 72 L368 58 L458 62 L518 85 L538 118" fill="rgba(201,168,76,0.25)" stroke="#C9A84C" stroke-width="0.8"/>
+                  <circle cx="162" cy="222" r="44" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+                  <circle cx="162" cy="222" r="28" fill="#0a0a0a" stroke="#C9A84C" stroke-width="1"/>
+                  <circle cx="508" cy="222" r="44" fill="none" stroke="#C9A84C" stroke-width="1.5"/>
+                  <circle cx="508" cy="222" r="28" fill="#0a0a0a" stroke="#C9A84C" stroke-width="1"/>
+                </svg>
+              </div>
+            </div>
+            <div class="car-gradient"></div>
+            <div class="car-price">₹ 4.2 Cr</div>
+            <div class="car-tag">Hot</div>
+            <div class="car-content">
+              <div class="car-brand">Ferrari</div>
+              <div class="car-name">SF90 Stradale</div>
+              <div class="car-specs">
+                <div class="spec"><div class="spec-val">986</div><div class="spec-key">BHP</div></div>
+                <div class="spec"><div class="spec-val">2.5s</div><div class="spec-key">0-100</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Car 2 -->
+          <div class="car-card" style="height:400px;">
+            <div class="car-img-wrap">
+              <div class="car-visual cv2">
+                <div class="scratch-overlay"></div>
+                <svg class="car-icon-svg" viewBox="0 0 600 280" fill="none">
+                  <path d="M30 215 L65 168 L145 138 L260 112 L375 100 L478 104 L558 126 L596 165 L600 215 Z" fill="rgba(100,150,200,0.5)"/>
+                  <path d="M210 112 L270 62 L378 48 L468 52 L528 76 L548 108" fill="rgba(100,150,200,0.2)" stroke="#6496C8" stroke-width="0.8"/>
+                  <circle cx="158" cy="217" r="44" fill="none" stroke="#6496C8" stroke-width="1.5"/>
+                  <circle cx="158" cy="217" r="28" fill="#0a0a12" stroke="#6496C8" stroke-width="1"/>
+                  <circle cx="510" cy="217" r="44" fill="none" stroke="#6496C8" stroke-width="1.5"/>
+                  <circle cx="510" cy="217" r="28" fill="#0a0a12" stroke="#6496C8" stroke-width="1"/>
+                </svg>
+              </div>
+            </div>
+            <div class="car-gradient"></div>
+            <div class="car-price">₹ 2.8 Cr</div>
+            <div class="car-content">
+              <div class="car-brand">Porsche</div>
+              <div class="car-name">911 GT3 RS</div>
+              <div class="car-specs">
+                <div class="spec"><div class="spec-val">520</div><div class="spec-key">BHP</div></div>
+                <div class="spec"><div class="spec-val">3.2s</div><div class="spec-key">0-100</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Car 3 -->
+          <div class="car-card" style="height:400px;">
+            <div class="car-img-wrap">
+              <div class="car-visual cv3">
+                <div class="scratch-overlay"></div>
+                <svg class="car-icon-svg" viewBox="0 0 600 280" fill="none">
+                  <path d="M35 212 L68 168 L148 136 L262 110 L372 100 L476 104 L556 124 L596 162 L600 212 Z" fill="rgba(200,80,80,0.5)"/>
+                  <path d="M212 110 L272 60 L375 46 L465 50 L525 74 L545 108" fill="rgba(200,80,80,0.2)" stroke="#C85050" stroke-width="0.8"/>
+                  <circle cx="156" cy="214" r="44" fill="none" stroke="#C85050" stroke-width="1.5"/>
+                  <circle cx="156" cy="214" r="28" fill="#100808" stroke="#C85050" stroke-width="1"/>
+                  <circle cx="508" cy="214" r="44" fill="none" stroke="#C85050" stroke-width="1.5"/>
+                  <circle cx="508" cy="214" r="28" fill="#100808" stroke="#C85050" stroke-width="1"/>
+                </svg>
+              </div>
+            </div>
+            <div class="car-gradient"></div>
+            <div class="car-price">₹ 3.6 Cr</div>
+            <div class="car-tag">New</div>
+            <div class="car-content">
+              <div class="car-brand">Lamborghini</div>
+              <div class="car-name">Huracán Tecnica</div>
+              <div class="car-specs">
+                <div class="spec"><div class="spec-val">640</div><div class="spec-key">BHP</div></div>
+                <div class="spec"><div class="spec-val">3.0s</div><div class="spec-key">0-100</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Car 4 -->
+          <div class="car-card" style="height:400px;">
+            <div class="car-img-wrap">
+              <div class="car-visual cv4">
+                <div class="scratch-overlay"></div>
+                <svg class="car-icon-svg" viewBox="0 0 600 280" fill="none">
+                  <path d="M30 218 L60 172 L138 142 L250 116 L360 104 L462 108 L544 130 L590 168 L600 218 Z" fill="rgba(80,200,200,0.4)"/>
+                  <path d="M200 116 L258 66 L362 52 L455 56 L516 80 L534 114" fill="rgba(80,200,200,0.15)" stroke="#50C8C8" stroke-width="0.8"/>
+                  <circle cx="152" cy="220" r="44" fill="none" stroke="#50C8C8" stroke-width="1.5"/>
+                  <circle cx="152" cy="220" r="28" fill="#080a0a" stroke="#50C8C8" stroke-width="1"/>
+                  <circle cx="506" cy="220" r="44" fill="none" stroke="#50C8C8" stroke-width="1.5"/>
+                  <circle cx="506" cy="220" r="28" fill="#080a0a" stroke="#50C8C8" stroke-width="1"/>
+                </svg>
+              </div>
+            </div>
+            <div class="car-gradient"></div>
+            <div class="car-price">₹ 3.1 Cr</div>
+            <div class="car-content">
+              <div class="car-brand">McLaren</div>
+              <div class="car-name">720S Spider</div>
+              <div class="car-specs">
+                <div class="spec"><div class="spec-val">720</div><div class="spec-key">BHP</div></div>
+                <div class="spec"><div class="spec-val">2.8s</div><div class="spec-key">0-100</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Car 5 -->
+          <div class="car-card" style="height:400px;">
+            <div class="car-img-wrap">
+              <div class="car-visual" style="background:linear-gradient(135deg,#0a0a10,#0f0a1a,#0a0a10)">
+                <div class="scratch-overlay"></div>
+                <svg class="car-icon-svg" viewBox="0 0 600 280" fill="none">
+                  <path d="M25 220 L55 174 L130 144 L240 118 L350 106 L456 110 L538 132 L588 170 L600 220 Z" fill="rgba(150,100,220,0.4)"/>
+                  <path d="M192 118 L250 68 L352 54 L448 58 L508 82 L528 116" fill="rgba(150,100,220,0.15)" stroke="#9664DC" stroke-width="0.8"/>
+                  <circle cx="148" cy="222" r="44" fill="none" stroke="#9664DC" stroke-width="1.5"/>
+                  <circle cx="148" cy="222" r="28" fill="#080810" stroke="#9664DC" stroke-width="1"/>
+                  <circle cx="502" cy="222" r="44" fill="none" stroke="#9664DC" stroke-width="1.5"/>
+                  <circle cx="502" cy="222" r="28" fill="#080810" stroke="#9664DC" stroke-width="1"/>
+                </svg>
+              </div>
+            </div>
+            <div class="car-gradient"></div>
+            <div class="car-price">₹ 5.8 Cr</div>
+            <div class="car-content">
+              <div class="car-brand">Aston Martin</div>
+              <div class="car-name">Valkyrie AMR Pro</div>
+              <div class="car-specs">
+                <div class="spec"><div class="spec-val">1000</div><div class="spec-key">BHP</div></div>
+                <div class="spec"><div class="spec-val">2.5s</div><div class="spec-key">0-100</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Car 6 -->
+          <div class="car-card" style="height:400px;">
+            <div class="car-img-wrap">
+              <div class="car-visual" style="background:linear-gradient(135deg,#0a0808,#150a0a,#0a0a0a)">
+                <div class="scratch-overlay"></div>
+                <svg class="car-icon-svg" viewBox="0 0 600 280" fill="none">
+                  <path d="M35 215 L65 170 L142 140 L252 114 L362 102 L464 106 L546 128 L592 166 L600 215 Z" fill="rgba(220,180,80,0.45)"/>
+                  <path d="M202 114 L262 64 L364 50 L456 54 L516 78 L536 112" fill="rgba(220,180,80,0.18)" stroke="#DCB450" stroke-width="0.8"/>
+                  <circle cx="154" cy="217" r="44" fill="none" stroke="#DCB450" stroke-width="1.5"/>
+                  <circle cx="154" cy="217" r="28" fill="#0a0a08" stroke="#DCB450" stroke-width="1"/>
+                  <circle cx="504" cy="217" r="44" fill="none" stroke="#DCB450" stroke-width="1.5"/>
+                  <circle cx="504" cy="217" r="28" fill="#0a0a08" stroke="#DCB450" stroke-width="1"/>
+                </svg>
+              </div>
+            </div>
+            <div class="car-gradient"></div>
+            <div class="car-price">₹ 7.5 Cr</div>
+            <div class="car-tag">Exclusive</div>
+            <div class="car-content">
+              <div class="car-brand">Bentley</div>
+              <div class="car-name">Mulliner Bacalar</div>
+              <div class="car-specs">
+                <div class="spec"><div class="spec-val">650</div><div class="spec-key">BHP</div></div>
+                <div class="spec"><div class="spec-val">3.5s</div><div class="spec-key">0-100</div></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Gallery -->
+        <div style="margin-top:5rem;">
+          <div class="section-label reveal">Showroom Gallery</div>
+          <div class="gallery-grid reveal">
+            <div class="g-item"><div class="g-inner gb1"><div class="g-overlay"><div class="g-overlay-text">Ferrari SF90<br><small style="font-size:0.7rem;color:var(--gold)">Interior Detail</small></div></div></div></div>
+            <div class="g-item"><div class="g-inner gb2"><div class="g-overlay"><div class="g-overlay-text">Porsche GT3<br><small style="font-size:0.7rem;color:var(--gold)">Engine Bay</small></div></div></div></div>
+            <div class="g-item"><div class="g-inner gb3"><div class="g-overlay"><div class="g-overlay-text">Huracán<br><small style="font-size:0.7rem;color:var(--gold)">Side Profile</small></div></div></div></div>
+            <div class="g-item"><div class="g-inner gb4"><div class="g-overlay"><div class="g-overlay-text">McLaren 720S<br><small style="font-size:0.7rem;color:var(--gold)">Cockpit</small></div></div></div></div>
+            <div class="g-item"><div class="g-inner gb5"><div class="g-overlay"><div class="g-overlay-text">Aston Martin<br><small style="font-size:0.7rem;color:var(--gold)">Rear Wing</small></div></div></div></div>
+            <div class="g-item"><div class="g-inner gb6"><div class="g-overlay"><div class="g-overlay-text">Bentley<br><small style="font-size:0.7rem;color:var(--gold)">Bespoke Leather</small></div></div></div></div>
+            <div class="g-item"><div class="g-inner gb7"><div class="g-overlay"><div class="g-overlay-text">Track Day<br><small style="font-size:0.7rem;color:var(--gold)">Experience</small></div></div></div></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ==================== SERVICES PAGE ==================== -->
+<div class="page" id="page-services">
+  <div style="padding-top:120px;">
+    <section>
+      <div class="max-container">
+        <div class="section-label reveal">What We Do</div>
+        <h2 class="section-title reveal">Services Built for<br><em>Discerning Owners</em></h2>
+        <p class="reveal" style="max-width:580px;color:var(--text-muted);line-height:1.8;margin-top:1rem;">We don't simply sell automobiles. We forge relationships built on trust, expertise, and an unwavering commitment to your complete satisfaction.</p>
+        <div class="divider reveal"></div>
+
+        <div class="services-grid reveal">
+          <div class="service-card">
+            <div class="service-num">01</div>
+            <svg class="service-icon" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="10" stroke="currentColor" stroke-width="1.5"/><path d="M24 4v4M24 40v4M4 24h4M40 24h4M7.7 7.7l2.8 2.8M37.5 37.5l2.8 2.8M37.5 7.7l-2.8 2.8M10.5 37.5l-2.8 2.8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <div class="service-name">Bespoke Sourcing</div>
+            <p class="service-desc">Our global network spans over 40 countries. From factory-order Ferraris to rare limited editions — we find what others cannot. Every configuration, every specification, delivered.</p>
+          </div>
+          <div class="service-card">
+            <div class="service-num">02</div>
+            <svg class="service-icon" viewBox="0 0 48 48" fill="none"><path d="M8 20h32M8 28h32M12 12l4 8M32 12l4 8M12 36l4-8M32 36l4-8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <div class="service-name">Track Experiences</div>
+            <p class="service-desc">Exclusive access to India's premier circuits. Our professional driving coaches ensure you extract every ounce of performance from your machine in complete safety.</p>
+          </div>
+          <div class="service-card">
+            <div class="service-num">03</div>
+            <svg class="service-icon" viewBox="0 0 48 48" fill="none"><path d="M24 8l4 8h8l-6 6 2 8-8-4-8 4 2-8-6-6h8Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            <div class="service-name">24/7 Concierge</div>
+            <p class="service-desc">Your dedicated relationship manager is available around the clock. Insurance, documentation, logistics, servicing — consider it handled with absolute discretion.</p>
+          </div>
+          <div class="service-card">
+            <div class="service-num">04</div>
+            <svg class="service-icon" viewBox="0 0 48 48" fill="none"><rect x="8" y="14" width="32" height="20" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M8 22h32M16 30h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <div class="service-name">Bespoke Finance</div>
+            <p class="service-desc">Tailored financial structures designed around your portfolio. From structured leasing to balloon payment arrangements — your money works as hard as your engine.</p>
+          </div>
+        </div>
+
+        <!-- Extended services list -->
+        <div style="margin-top:5rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem;" class="reveal">
+          <div style="padding:2.5rem;border:1px solid var(--border);position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--gold);"></div>
+            <div class="service-name" style="margin-bottom:1rem;">Restoration & Customisation</div>
+            <p class="service-desc">Our master craftsmen transform and restore vehicles to museum-grade perfection. Bespoke interiors, custom liveries, and period-correct restorations — all executed by hand.</p>
+          </div>
+          <div style="padding:2.5rem;border:1px solid var(--border);position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--gold);"></div>
+            <div class="service-name" style="margin-bottom:1rem;">Investment Advisory</div>
+            <p class="service-desc">Classic and limited-edition automobiles are increasingly sought-after alternative assets. Our advisors identify vehicles with strong appreciation potential and manage your collection.</p>
+          </div>
+          <div style="padding:2.5rem;border:1px solid var(--border);position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--gold);"></div>
+            <div class="service-name" style="margin-bottom:1rem;">White-Glove Delivery</div>
+            <p class="service-desc">Your vehicle is transported in enclosed carriers, delivered by uniformed specialists, and presented with full ceremony — wherever in the world you desire.</p>
+          </div>
+          <div style="padding:2.5rem;border:1px solid var(--border);position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;width:3px;height:100%;background:var(--gold);"></div>
+            <div class="service-name" style="margin-bottom:1rem;">Annual Maintenance Plans</div>
+            <p class="service-desc">Factory-trained technicians, manufacturer-approved parts, and comprehensive care plans ensure your automobile remains in peak condition year-round.</p>
+          </div>
+        </div>
+
+        <div style="margin-top:4rem;text-align:center;" class="reveal">
+          <a href="#" class="btn-primary" onclick="navigate('booking'); return false;">Schedule a Consultation</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ==================== ABOUT PAGE ==================== -->
+<div class="page" id="page-about">
+  <div style="padding-top:120px;">
+    <section>
+      <div class="max-container">
+        <div class="about-layout">
+          <div class="about-visual reveal-left">
+            <div class="about-main-img">
+              <svg viewBox="0 0 500 500" fill="none" style="width:85%;opacity:0.9">
+                <!-- Showroom concept visual -->
+                <rect x="50" y="100" width="400" height="300" fill="none" stroke="rgba(201,168,76,0.2)" stroke-width="0.8"/>
+                <rect x="80" y="130" width="340" height="240" fill="rgba(201,168,76,0.03)"/>
+                <!-- Car in showroom -->
+                <path d="M100 330 L120 295 L170 270 L230 250 L310 245 L370 250 L410 270 L435 300 L440 330 Z" fill="rgba(201,168,76,0.35)" stroke="rgba(201,168,76,0.6)" stroke-width="1"/>
+                <path d="M190 250 L225 218 L310 205 L375 210 L400 238" fill="rgba(201,168,76,0.2)" stroke="rgba(201,168,76,0.4)" stroke-width="0.8"/>
+                <circle cx="178" cy="332" r="32" fill="none" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+                <circle cx="178" cy="332" r="20" fill="#0a0a08" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+                <circle cx="390" cy="332" r="32" fill="none" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+                <circle cx="390" cy="332" r="20" fill="#0a0a08" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+                <!-- Showroom lights -->
+                <line x1="150" y1="100" x2="150" y2="130" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+                <line x1="250" y1="100" x2="250" y2="130" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+                <line x1="350" y1="100" x2="350" y2="130" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+                <ellipse cx="150" cy="145" rx="30" ry="8" fill="rgba(201,168,76,0.08)"/>
+                <ellipse cx="250" cy="145" rx="30" ry="8" fill="rgba(201,168,76,0.08)"/>
+                <ellipse cx="350" cy="145" rx="30" ry="8" fill="rgba(201,168,76,0.08)"/>
+                <!-- APEX text -->
+                <text x="250" y="195" text-anchor="middle" fill="rgba(201,168,76,0.25)" font-family="serif" font-size="18" letter-spacing="8">APEX</text>
+                <!-- Ground reflection -->
+                <path d="M80 370 L420 370" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+                <ellipse cx="280" cy="370" rx="160" ry="10" fill="rgba(201,168,76,0.04)"/>
+                <!-- Corner details -->
+                <path d="M50 100 L80 100" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+                <path d="M50 100 L50 130" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+                <path d="M450 100 L420 100" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+                <path d="M450 100 L450 130" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+                <path d="M50 400 L80 400" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+                <path d="M50 400 L50 370" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+                <path d="M450 400 L420 400" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+                <path d="M450 400 L450 370" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="about-badge">
+              <div class="badge-num">36</div>
+              <div class="badge-text">Years of<br>Excellence</div>
+            </div>
+            <div class="about-accent"></div>
+          </div>
+
+          <div class="about-text reveal-right">
+            <div class="section-label">Our Story</div>
+            <h2 class="section-title">A Legacy of<br><em>Pure Passion</em></h2>
+            <div class="divider"></div>
+            <p>Founded in 1987 by <strong>Vikram Mehra</strong>, APEX MOTORS began with a singular conviction: that the finest automobiles deserve the finest stewardship. What started as a single showroom in Mumbai has grown into India's most prestigious automotive destination.</p>
+            <p>Over three decades, we have placed over 2,400 extraordinary vehicles with clients who understand that driving is not merely transport — it is expression. Every transaction we facilitate is rooted in deep trust, meticulous preparation, and an uncompromising commitment to authenticity.</p>
+            <p>Today, under the leadership of <strong>Aryan Mehra</strong>, APEX continues to evolve — embracing the electrified future while honoring the combustion legends that defined us. Our promise remains unchanged: excellence, always.</p>
+            <div class="values-grid">
+              <div class="value-item">
+                <div class="value-name">Integrity</div>
+                <div class="value-desc">Every vehicle we sell carries our full verification and provenance guarantee.</div>
+              </div>
+              <div class="value-item">
+                <div class="value-name">Expertise</div>
+                <div class="value-desc">Our team's combined experience spans over 200 years of automotive knowledge.</div>
+              </div>
+              <div class="value-item">
+                <div class="value-name">Discretion</div>
+                <div class="value-desc">Your privacy and confidence are paramount to everything we do.</div>
+              </div>
+              <div class="value-item">
+                <div class="value-name">Excellence</div>
+                <div class="value-desc">The standard we hold ourselves to, in every detail, every time.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin-top:6rem;" class="reveal">
+          <div style="background:var(--surface);padding:3rem 2rem;text-align:center;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--gold);letter-spacing:0.05em;line-height:1;">2,400+</div>
+            <div style="font-size:0.7rem;letter-spacing:0.25em;color:var(--text-muted);text-transform:uppercase;margin-top:0.5rem;">Vehicles Sold</div>
+          </div>
+          <div style="background:var(--surface);padding:3rem 2rem;text-align:center;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--gold);letter-spacing:0.05em;line-height:1;">36</div>
+            <div style="font-size:0.7rem;letter-spacing:0.25em;color:var(--text-muted);text-transform:uppercase;margin-top:0.5rem;">Years Heritage</div>
+          </div>
+          <div style="background:var(--surface);padding:3rem 2rem;text-align:center;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--gold);letter-spacing:0.05em;line-height:1;">40+</div>
+            <div style="font-size:0.7rem;letter-spacing:0.25em;color:var(--text-muted);text-transform:uppercase;margin-top:0.5rem;">Countries Network</div>
+          </div>
+          <div style="background:var(--surface);padding:3rem 2rem;text-align:center;">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--gold);letter-spacing:0.05em;line-height:1;">98%</div>
+            <div style="font-size:0.7rem;letter-spacing:0.25em;color:var(--text-muted);text-transform:uppercase;margin-top:0.5rem;">Client Retention</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ==================== BOOKING PAGE ==================== -->
+<div class="page" id="page-booking">
+  <div style="padding-top:120px;">
+    <section>
+      <div class="max-container">
+        <div class="section-label reveal">Experience It First</div>
+        <h2 class="section-title reveal">Book Your<br><em>Test Drive</em></h2>
+        <div class="divider reveal"></div>
+
+        <div class="booking-layout">
+          <div class="reveal">
+            <p style="color:var(--text-muted);line-height:1.8;margin-bottom:3rem;">Reserve your private test drive experience at our showroom or at a location of your choosing. Our specialists will accompany you to ensure you fully appreciate every dimension of your chosen vehicle.</p>
+
+            <form onsubmit="submitForm(event)">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">First Name</label>
+                  <input type="text" class="form-input" placeholder="Arjun">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Last Name</label>
+                  <input type="text" class="form-input" placeholder="Sharma">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" class="form-input" placeholder="arjun@example.com">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <input type="tel" class="form-input" placeholder="+91 98765 43210">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Vehicle of Interest</label>
+                <select class="form-select">
+                  <option value="">Select a vehicle</option>
+                  <option>Ferrari SF90 Stradale — ₹4.2 Cr</option>
+                  <option>Porsche 911 GT3 RS — ₹2.8 Cr</option>
+                  <option>Lamborghini Huracán Tecnica — ₹3.6 Cr</option>
+                  <option>McLaren 720S Spider — ₹3.1 Cr</option>
+                  <option>Aston Martin Valkyrie AMR — ₹5.8 Cr</option>
+                  <option>Bentley Mulliner Bacalar — ₹7.5 Cr</option>
+                  <option>I'd like a recommendation</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Preferred Date</label>
+                  <input type="date" class="form-input" style="color-scheme:dark;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Preferred Time</label>
+                  <select class="form-select">
+                    <option>10:00 AM</option>
+                    <option>11:00 AM</option>
+                    <option>12:00 PM</option>
+                    <option>2:00 PM</option>
+                    <option>3:00 PM</option>
+                    <option>4:00 PM</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Additional Notes</label>
+                <textarea class="form-textarea" placeholder="Tell us about your requirements, preferred route, or any special requests..."></textarea>
+              </div>
+              <button type="submit" class="btn-primary" style="width:100%;justify-content:center;margin-top:1rem;">
+                Reserve My Experience
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </button>
+            </form>
+          </div>
+
+          <div class="reveal" style="transition-delay:0.2s">
+            <div class="info-block">
+              <div class="info-block-title">Private Showroom Viewing</div>
+              <div class="info-block-text">Experience our full collection in complete privacy. Our specialists are present to answer every question without pressure — this is your time, at your pace.</div>
+            </div>
+            <div class="info-block">
+              <div class="info-block-title">Route Selection</div>
+              <div class="info-block-text">Choose from our curated test routes — mountain switchbacks, expressway straights, or urban boulevard — each designed to showcase different aspects of the vehicle.</div>
+            </div>
+            <div class="info-block">
+              <div class="info-block-title">Refreshments & Hospitality</div>
+              <div class="info-block-text">Fine whisky, estate coffee, or champagne — our hospitality suite is prepared to your preferences before you arrive.</div>
+            </div>
+            <div class="info-block">
+              <div class="info-block-title">Post-Drive Consultation</div>
+              <div class="info-block-text">Following your drive, our financial specialists can walk you through bespoke acquisition structures tailored to your requirements.</div>
+            </div>
+
+            <div style="margin-top:2rem;padding:2rem;background:var(--surface);border:1px solid var(--border);">
+              <div style="font-size:0.65rem;letter-spacing:0.3em;color:var(--gold);margin-bottom:1rem;text-transform:uppercase;">Opening Hours</div>
+              <div style="display:grid;gap:0.5rem;">
+                <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:var(--text-muted);">
+                  <span>Monday – Friday</span><span style="color:var(--white);">10:00 – 19:00</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:var(--text-muted);">
+                  <span>Saturday</span><span style="color:var(--white);">10:00 – 18:00</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:0.85rem;color:var(--text-muted);">
+                  <span>Sunday</span><span style="color:var(--white);">By Appointment</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ==================== CONTACT PAGE ==================== -->
+<div class="page" id="page-contact">
+  <div style="padding-top:120px;">
+    <section>
+      <div class="max-container">
+        <div class="section-label reveal">Get In Touch</div>
+        <h2 class="section-title reveal">We'd Love to<br><em>Hear From You</em></h2>
+        <p class="reveal" style="max-width:580px;color:var(--text-muted);line-height:1.8;margin-top:1rem;">Whether you're enquiring about a specific vehicle, requiring bespoke sourcing, or simply wish to visit our showroom — our team is ready to assist.</p>
+
+        <div class="contact-grid">
+          <div>
+            <div class="contact-item reveal">
+              <div class="contact-label">Showroom Address</div>
+              <div class="contact-val">14 Marine Drive, Nariman Point<br>Mumbai, Maharashtra 400021</div>
+            </div>
+            <div class="contact-item reveal" style="transition-delay:0.1s">
+              <div class="contact-label">Telephone</div>
+              <div class="contact-val">+91 22 6680 4400</div>
+            </div>
+            <div class="contact-item reveal" style="transition-delay:0.2s">
+              <div class="contact-label">Enquiries</div>
+              <div class="contact-val">enquiries@apexmotors.in</div>
+            </div>
+            <div class="contact-item reveal" style="transition-delay:0.3s">
+              <div class="contact-label">Private Sales</div>
+              <div class="contact-val">private@apexmotors.in</div>
+            </div>
+
+            <div style="margin-top:3rem;" class="reveal" style="transition-delay:0.4s">
+              <form onsubmit="submitForm(event)" style="max-width:480px;">
+                <div class="form-group">
+                  <label class="form-label">Your Name</label>
+                  <input type="text" class="form-input" placeholder="Full Name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-input" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Message</label>
+                  <textarea class="form-textarea" placeholder="How can we assist you?"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">
+                  Send Message
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <div class="reveal" style="transition-delay:0.2s">
+            <div class="map-placeholder">
+              <div class="map-inner">
+                <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:1rem;">
+                  <div class="map-pin"></div>
+                  <div style="text-align:center;">
+                    <div style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--white);">APEX MOTORS</div>
+                    <div style="font-size:0.7rem;color:var(--text-muted);letter-spacing:0.2em;margin-top:0.3rem;">14 Marine Drive, Mumbai</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1.5rem;">
+              <div style="padding:1.5rem;border:1px solid var(--border);text-align:center;">
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--gold);letter-spacing:0.1em;">Valet Parking</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.3rem;">Complimentary</div>
+              </div>
+              <div style="padding:1.5rem;border:1px solid var(--border);text-align:center;">
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--gold);letter-spacing:0.1em;">By Appointment</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.3rem;">After Hours Available</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="max-container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="logo" onclick="navigate('home'); return false;">
+          <div class="logo-icon"></div>
+          APEX MOTORS
+        </a>
+        <p>India's most prestigious automotive destination. Curating exceptional machines for exceptional individuals since 1987.</p>
+        <div style="margin-top:1.5rem;display:flex;align-items:center;gap:0.75rem;">
+          <div style="width:40px;height:1px;background:var(--gold);"></div>
+          <span style="font-size:0.65rem;letter-spacing:0.3em;color:var(--gold);">EST. 1987</span>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Navigate</div>
+        <ul class="footer-links">
+          <li><a href="#" onclick="navigate('home'); return false;">Home</a></li>
+          <li><a href="#" onclick="navigate('fleet'); return false;">Our Fleet</a></li>
+          <li><a href="#" onclick="navigate('services'); return false;">Services</a></li>
+          <li><a href="#" onclick="navigate('about'); return false;">About</a></li>
+          <li><a href="#" onclick="navigate('contact'); return false;">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Services</div>
+        <ul class="footer-links">
+          <li><a href="#">Bespoke Sourcing</a></li>
+          <li><a href="#">Track Experiences</a></li>
+          <li><a href="#">Concierge</a></li>
+          <li><a href="#">Finance & Leasing</a></li>
+          <li><a href="#">Restoration</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Contact</div>
+        <ul class="footer-links">
+          <li><a href="#">14 Marine Drive, Mumbai</a></li>
+          <li><a href="#">+91 22 6680 4400</a></li>
+          <li><a href="#">enquiries@apexmotors.in</a></li>
+          <li><a href="#">Mon–Sat: 10:00–19:00</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 APEX MOTORS. All rights reserved. Built with precision.</div>
+      <div class="social-row">
+        <a href="#" class="social-btn">in</a>
+        <a href="#" class="social-btn">ig</a>
+        <a href="#" class="social-btn">fb</a>
+        <a href="#" class="social-btn">yt</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===== LOADER =====
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hidden');
+    initAnimations();
+  }, 2200);
+});
+
+// ===== CUSTOM CURSOR =====
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursor-ring');
+const mouseGlow = document.getElementById('mouseGlow');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+  mouseGlow.style.left = mx + 'px';
+  mouseGlow.style.top = my + 'px';
+});
+
+(function animateRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  cursorRing.style.left = rx + 'px';
+  cursorRing.style.top = ry + 'px';
+  requestAnimationFrame(animateRing);
+})();
+
+// ===== STICKY HEADER =====
+const header = document.getElementById('header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ===== PAGE NAVIGATION =====
+function navigate(page) {
+  const pt = document.getElementById('pageTransition');
+  pt.classList.add('enter');
+  setTimeout(() => {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById('page-' + page);
+    if (target) { target.classList.add('active'); }
+    window.scrollTo(0, 0);
+    pt.classList.remove('enter');
+    pt.classList.add('exit');
+    setTimeout(() => {
+      pt.classList.remove('exit');
+      initAnimations();
+    }, 500);
+  }, 500);
+}
+
+// ===== MOBILE NAV =====
+let mobileOpen = false;
+function toggleMobileNav() {
+  mobileOpen = !mobileOpen;
+  document.getElementById('mobileNav').classList.toggle('open', mobileOpen);
+  const spans = document.querySelectorAll('.hamburger span');
+  if (mobileOpen) {
+    spans[0].style.transform = 'rotate(45deg) translate(4px, 4px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(4px, -4px)';
+  } else {
+    spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+  }
+}
+
+// ===== SCROLL ANIMATIONS =====
+function initAnimations() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+    el.classList.remove('visible');
+    observer.observe(el);
+  });
+}
+
+// ===== PARALLAX =====
+window.addEventListener('scroll', () => {
+  const parallaxBg = document.getElementById('parallaxBg');
+  if (parallaxBg) {
+    const rect = parallaxBg.closest('.parallax-strip').getBoundingClientRect();
+    const scrolled = -rect.top * 0.4;
+    parallaxBg.style.transform = `translateY(${scrolled}px)`;
+  }
+});
+
+// ===== FORM SUBMIT =====
+function submitForm(e) {
+  e.preventDefault();
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 4000);
+}
+
+// ===== COUNTER ANIMATION =====
+function animateCounters() {
+  document.querySelectorAll('.stat-num').forEach(el => {
+    const target = parseFloat(el.textContent);
+    if (isNaN(target)) return;
+    const suffix = el.textContent.replace(/[\d.]/g, '');
+    let start = 0;
+    const duration = 2000;
+    const step = timestamp => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(eased * target) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+}
+
+// Observe stats
+setTimeout(() => {
+  const statsObs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) animateCounters(); });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.hero-stats').forEach(el => statsObs.observe(el));
+}, 3000);
+
+// ===== INITIAL CALL =====
+setTimeout(initAnimations, 2300);
+</script>
+</body>
+</html>
